@@ -156,7 +156,45 @@ export default {
           '50%': {
             transform: 'translateY(-15px)'
           }
-        }
+        },
+        'float': {
+          '0%, 100%': {
+            transform: 'translateY(0) translateX(0)',
+          },
+          '50%': {
+            transform: 'translateY(-20px) translateX(10px)',
+          },
+        },
+        'float-delayed': {
+          '0%, 100%': {
+            transform: 'translateY(0) translateX(0)',
+          },
+          '50%': {
+            transform: 'translateY(-15px) translateX(-10px)',
+          },
+        },
+        'float-slow': {
+          '0%, 100%': {
+            transform: 'translateY(0) translateX(0)',
+          },
+          '50%': {
+            transform: 'translateY(-10px) translateX(15px)',
+          },
+        },
+        'pulse': {
+          '0%': {
+            transform: 'scale(1)',
+            opacity: '1',
+          },
+          '50%': {
+            transform: 'scale(1.1)',
+            opacity: '0.8',
+          },
+          '100%': {
+            transform: 'scale(1)',
+            opacity: '1',
+          },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
@@ -166,8 +204,12 @@ export default {
         'slide-in': 'slide-in 0.3s ease-out',
         'gradient-shift': 'gradient-shift 15s ease infinite',
         'float-delayed': 'float-delayed 7s ease-in-out infinite',
-        'float-slow': 'float-slow 8s ease-in-out infinite'
-      }
+        'float-slow': 'float-slow 8s ease-in-out infinite',
+        'float': 'float 6s ease-in-out infinite',
+        'float-delayed': 'float-delayed 7s ease-in-out infinite',
+        'float-slow': 'float-slow 8s ease-in-out infinite',
+        'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+      },
     }
   },
 	plugins: [require("tailwindcss-animate")],
