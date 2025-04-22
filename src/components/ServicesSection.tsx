@@ -1,20 +1,73 @@
 
+import { useState } from 'react';
 import { Database, Globe, Monitor, Shield, Settings, Users } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
 
-const ServiceCard = ({ icon: Icon, title, description }: { icon: any, title: string, description: string }) => {
+const ServiceCard = ({ 
+  icon: Icon, 
+  title, 
+  description, 
+  index 
+}: { 
+  icon: any, 
+  title: string, 
+  description: string, 
+  index: number 
+}) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
+
   return (
-    <div className="glass-card p-6 rounded-xl card-hover">
-      <div className="w-12 h-12 mb-4 flex items-center justify-center rounded-lg bg-gradient-to-r from-primary/10 to-secondary/10">
-        <Icon size={24} className="text-primary" />
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 30 }}
+      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      className={`p-6 rounded-xl transition-all duration-300 ${
+        isHovered 
+          ? 'bg-gradient-to-br from-blue-50/90 to-white/95 shadow-lg transform -translate-y-1'
+          : 'glass-card'
+      }`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div className={`w-14 h-14 mb-5 flex items-center justify-center rounded-lg transition-all duration-300 ${
+        isHovered 
+          ? 'bg-gradient-to-r from-primary to-secondary'
+          : 'bg-gradient-to-r from-primary/10 to-secondary/10'
+      }`}>
+        <Icon size={24} className={`transition-colors duration-300 ${isHovered ? 'text-white' : 'text-primary'}`} />
       </div>
-      <h3 className="text-xl font-semibold mb-2">{title}</h3>
-      <p className="text-gray-600">{description}</p>
-    </div>
+      <h3 className="text-xl font-semibold mb-3">{title}</h3>
+      <p className={`transition-colors duration-300 ${isHovered ? 'text-gray-700' : 'text-gray-600'}`}>
+        {description}
+      </p>
+      {isHovered && (
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="mt-4"
+        >
+          <a href="#" className="inline-flex items-center text-primary font-medium hover:underline">
+            Learn more <span className="ml-1">→</span>
+          </a>
+        </motion.div>
+      )}
+    </motion.div>
   );
 };
 
 const ServicesSection = () => {
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
+
   const services = [
     {
       icon: Monitor,
@@ -49,10 +102,20 @@ const ServicesSection = () => {
   ];
 
   return (
-    <section id="services" className="section-padding bg-white">
-      <div className="container mx-auto">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-block px-4 py-1 bg-blue-50 rounded-full text-primary font-medium mb-4">
+    <section id="services" className="py-24 px-4 md:px-8 bg-white relative overflow-hidden">
+      {/* Background elements */}
+      <div className="absolute -top-24 -right-24 w-96 h-96 bg-blue-50/50 rounded-full filter blur-3xl opacity-30 z-0"></div>
+      <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-orange-50/50 rounded-full filter blur-3xl opacity-30 z-0"></div>
+      
+      <div className="container mx-auto relative z-10">
+        <motion.div 
+          ref={ref}
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.5 }}
+          className="text-center max-w-3xl mx-auto mb-16"
+        >
+          <div className="inline-block px-4 py-1 bg-blue-50/80 backdrop-blur-sm rounded-full text-primary font-medium mb-4 shadow-sm">
             Our Services
           </div>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -61,7 +124,7 @@ const ServicesSection = () => {
           <p className="text-lg text-gray-600">
             We offer a wide range of IT services tailored to meet the unique needs of your business, helping you stay competitive in the digital landscape.
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service, index) => (
@@ -70,15 +133,21 @@ const ServicesSection = () => {
               icon={service.icon}
               title={service.title}
               description={service.description}
+              index={index}
             />
           ))}
         </div>
         
-        <div className="text-center mt-12">
-          <Button className="bg-gradient-to-r from-primary to-secondary text-white px-8">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ delay: 0.6, duration: 0.5 }}
+          className="text-center mt-16"
+        >
+          <Button className="bg-gradient-to-r from-primary to-secondary text-white px-8 py-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">
             View All Services
           </Button>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

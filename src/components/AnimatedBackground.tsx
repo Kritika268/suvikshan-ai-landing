@@ -1,11 +1,24 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const AnimatedBackground = () => {
+  const [scrollY, setScrollY] = useState(0);
+  const isMobile = useIsMobile();
+  
+  // Track scroll position for parallax effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY * 0.2);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <div className="fixed inset-0 -z-10">
-      {/* Dark overlay with gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/90 via-gray-900/95 to-black overflow-hidden">
+    <div className="fixed inset-0 -z-10 overflow-hidden">
+      {/* Dark gradient overlay with blues and oranges */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/90 via-gray-900/95 to-black">
         {/* Circuit pattern layer */}
         <div className="absolute inset-0 opacity-10" 
           style={{ 
@@ -14,23 +27,64 @@ const AnimatedBackground = () => {
           }}
         />
         
-        {/* Animated nodes and connections */}
+        {/* Animated orbs and nodes */}
         <div className="absolute inset-0">
-          {/* Glowing orbs */}
-          <div className="absolute w-[300px] h-[300px] rounded-full bg-blue-500/20 blur-3xl animate-float-slow top-1/4 left-1/4" />
-          <div className="absolute w-[250px] h-[250px] rounded-full bg-orange-400/20 blur-3xl animate-float-delayed top-1/2 right-1/4" />
-          <div className="absolute w-[200px] h-[200px] rounded-full bg-blue-400/20 blur-3xl animate-float bottom-1/4 left-1/3" />
+          {/* Large glowing orbs with parallax effect */}
+          <div 
+            className="absolute w-[300px] h-[300px] rounded-full bg-blue-500/20 blur-3xl animate-float-slow" 
+            style={{ 
+              top: `${Math.max(10, 25 - scrollY * 0.05)}%`, 
+              left: `${Math.max(10, 25 - scrollY * 0.02)}%` 
+            }}
+          />
+          <div 
+            className="absolute w-[250px] h-[250px] rounded-full bg-orange-400/20 blur-3xl animate-float-delayed" 
+            style={{ 
+              top: `${Math.min(70, 50 + scrollY * 0.03)}%`, 
+              right: `${Math.min(30, 25 + scrollY * 0.01)}%` 
+            }}
+          />
+          <div 
+            className="absolute w-[200px] h-[200px] rounded-full bg-blue-400/20 blur-3xl animate-float" 
+            style={{ 
+              bottom: `${Math.max(10, 25 - scrollY * 0.04)}%`, 
+              left: `${Math.min(40, 33 + scrollY * 0.02)}%` 
+            }}
+          />
           
-          {/* Tech nodes */}
+          {/* Small tech nodes with pulse animations */}
           <div className="absolute inset-0 opacity-75">
+            {/* Nodes */}
             <div className="absolute w-2 h-2 bg-blue-400 rounded-full top-1/4 left-1/4 animate-pulse" />
             <div className="absolute w-2 h-2 bg-orange-400 rounded-full top-1/2 right-1/4 animate-pulse" />
             <div className="absolute w-2 h-2 bg-blue-300 rounded-full bottom-1/4 left-1/3 animate-pulse" />
+            <div className="absolute w-2 h-2 bg-orange-300 rounded-full bottom-1/3 right-1/3 animate-pulse" />
+            <div className="absolute w-2 h-2 bg-blue-200 rounded-full top-1/3 left-1/2 animate-pulse" />
             
-            {/* Connecting lines using pseudo-elements */}
-            <div className="absolute top-1/4 left-1/4 w-[200px] h-[1px] bg-gradient-to-r from-blue-400/50 to-transparent transform rotate-45" />
-            <div className="absolute top-1/2 right-1/4 w-[200px] h-[1px] bg-gradient-to-r from-orange-400/50 to-transparent transform -rotate-45" />
+            {/* Connecting lines */}
+            <div className="absolute top-1/4 left-1/4 w-[200px] h-[1px] bg-gradient-to-r from-blue-400/50 to-transparent transform rotate-45 animate-pulse" />
+            <div className="absolute top-1/2 right-1/4 w-[200px] h-[1px] bg-gradient-to-r from-orange-400/50 to-transparent transform -rotate-45 animate-pulse" />
+            <div className="absolute bottom-1/3 right-1/3 w-[150px] h-[1px] bg-gradient-to-r from-orange-300/50 to-transparent transform rotate-20 animate-pulse" />
+            <div className="absolute top-1/3 left-1/2 w-[180px] h-[1px] bg-gradient-to-r from-blue-200/50 to-transparent transform -rotate-30 animate-pulse" />
           </div>
+
+          {/* Digital particles - only on desktop */}
+          {!isMobile && (
+            <div className="absolute inset-0 opacity-30">
+              {[...Array(15)].map((_, i) => (
+                <div 
+                  key={i} 
+                  className="absolute w-1 h-1 bg-white rounded-full animate-float"
+                  style={{
+                    top: `${Math.random() * 100}%`,
+                    left: `${Math.random() * 100}%`,
+                    animationDelay: `${Math.random() * 5}s`,
+                    animationDuration: `${5 + Math.random() * 10}s`
+                  }}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
