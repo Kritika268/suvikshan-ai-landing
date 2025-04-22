@@ -1,4 +1,4 @@
-import AnimatedBackground from "@/components/AnimatedBackground";
+
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
@@ -14,10 +14,9 @@ import Footer from "@/components/Footer";
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex flex-col relative overflow-hidden">
-      <AnimatedBackground />
+    <div className="min-h-screen flex flex-col">
       <Navbar />
-      <main className="relative">
+      <main>
         <HeroSection />
         <PartnerLogos />
         <AboutSection />
